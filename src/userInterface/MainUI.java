@@ -29,7 +29,7 @@ public class MainUI extends JPanel implements ActionListener {
         
         add(playChess);
         add(message);
-	}
+	} //end constructor
 	
 	/**
 	 * If buttons are pressed, do
@@ -40,8 +40,11 @@ public class MainUI extends JPanel implements ActionListener {
 		if (src == playChess) { 
 			message.setText("Feature not implemented yet.");
 			playChess.setLocation(590, 20);
+			playChess.setText("Back");
+			chess.Board chessBoard = new chess.Board();
+			add(chessBoard);
 		}
-	}
+	} //end actionPerformed
 	
 	/**
 	 * Main routine allows ChessPlus to be run
