@@ -6,8 +6,9 @@ import javax.swing.*;
 
 public class MainUI extends JPanel implements ActionListener {
 	static final long serialVersionUID = 1L;
-	private JButton playChess;
+	private JButton playChessButton;
 	private JLabel message;
+	private JButton menuButton;
 	
 	/**
 	 * Creates starting menu screen, sets 
@@ -19,17 +20,47 @@ public class MainUI extends JPanel implements ActionListener {
 		setPreferredSize(new Dimension(700, 600));
 		setBackground(new Color(242, 232, 172));
 		
-		playChess = new JButton("Play chess");
-		playChess.addActionListener(this);
-		playChess.setBounds(310, 265, 100, 30);
+		playChessButton = new JButton("Play chess");
+		playChessButton.addActionListener(this);
+		playChessButton.setBounds(310, 265, 100, 30);
 		
 		message = new JLabel("Chess+", JLabel.CENTER);
-        message.setBounds(185, 220, 350, 35);
+		message.setBounds(185, 220, 350, 35);
         message.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
         
-        add(playChess);
-        add(message);
+        add(playChessButton);
+		add(message);
 	} //end constructor
+	
+	/**
+	 * Removes everything and restores
+	 * the main menu.
+	 */
+	public void showMenu() {
+		removeAll();
+		add(playChessButton);
+		add(message);
+        validate();
+        repaint();
+	} //end showMenu
+	
+	/**
+	 * Adds the back to main menu button 
+	 * and removes main menu components 
+	 * from the window.
+	 */
+	public void putMenuButton() {
+		remove(playChessButton);
+		remove(message);
+		
+		menuButton = new JButton("Menu");
+		menuButton.setBounds(590, 20, 100, 30);
+		menuButton.addActionListener(this);
+		
+		add(menuButton);
+		validate();
+		repaint();
+	} //end putMenuButton
 	
 	/**
 	 * If buttons are pressed, do
@@ -37,14 +68,15 @@ public class MainUI extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		Object src = evt.getSource();
-		if (src == playChess) { 
-			message.setText("Feature not implemented yet.");
-			playChess.setLocation(590, 20);
-			playChess.setText("Back");
+		if (src == playChessButton) {				//If play chess is pressed, remove main menu and put chess board
+			putMenuButton();
 			chess.Board chessBoard = new chess.Board();
-			add(chessBoard);
+			chessBoard.showChessBoard();
 		}
+		else if (src == menuButton)					//If menu is pressed, remove everything and restore main menu
+			showMenu();
 	} //end actionPerformed
+	
 	
 	/**
 	 * Main routine allows ChessPlus to be run
@@ -60,6 +92,6 @@ public class MainUI extends JPanel implements ActionListener {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
 		window.setVisible(true);
-	} //main
+	} //end main
 	
-} //class
+} //end class MainUI

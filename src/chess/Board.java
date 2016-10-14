@@ -8,15 +8,36 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 2L;
 	
 	private int[][] boardState = new int[8][8];
-	private JButton resignGame;
-	private JButton newGame;
+	private JButton resignButton;
+	private JButton newGameButton;
 	private JLabel chessMessage;
 	
 	public Board() {
+		/*setBounds(20, 20, 450, 450);
 		setBackground(Color.GRAY);
-		boardState = setupData();
-		resignGame = new JButton("Resign");
-		newGame = new JButton("New game");
+		boardState = setupData();*/
+		
+	}
+	
+	/**
+	 * Adds the chess board and associated 
+	 * buttons to main window.
+	 */
+	public void showChessBoard() {
+		resignButton = new JButton("Resign");
+		resignButton.setBounds(590, 100, 100, 30);
+		
+		newGameButton = new JButton("New game");
+		newGameButton.setBounds(590, 60, 100, 30);
+		
+		chessMessage = new JLabel("Please work");
+		
+		add(resignButton);
+		add(newGameButton);
+		add(chessMessage);
+		//add(this);
+		validate();
+		repaint();
 	}
 	
 	public int[][] setupData() {
