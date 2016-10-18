@@ -22,16 +22,20 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 		setLayout(null);
 		setPreferredSize(new Dimension(700, 600));
 		setBounds(0, 50, 700, 600);
-		setBackground(Color.GRAY);
 		boardState = setupData();
+		
 		resignButton = new JButton("Resign");
 		resignButton.setBounds(590, 50, 100, 30);
+		resignButton.addActionListener(this);
 		
 		newGameButton = new JButton("New game");
 		newGameButton.setBounds(590, 10, 100, 30);
+		newGameButton.addActionListener(this);
 		
 		chessMessage = new JLabel("White: Make your move.");
-		chessMessage.setBounds(100, 470, 400, 50);
+		chessMessage.setBounds(120, 475, 400, 45);
+		chessMessage.setOpaque(true);
+		chessMessage.setBackground(new Color(242, 232, 172));
 		chessMessage.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
 		
 		add(resignButton);
@@ -58,7 +62,16 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 		
 	}
 	
-	public void actionPerformed(ActionEvent evt) {}
+	public void actionPerformed(ActionEvent evt) {
+		Object src = evt.getSource();
+		if (src == resignButton) {
+			chessMessage.setText("White/black has resigned. White/black wins.");
+		}
+		else if (src == newGameButton) {
+			chessMessage.setText("White: Make your move.");
+			chessMessage.repaint();
+		}
+	}
 	public void mouseReleased(MouseEvent mEvt) {}
 	public void mousePressed(MouseEvent mEvt) {}
 	public void mouseClicked(MouseEvent mEvt) {}
