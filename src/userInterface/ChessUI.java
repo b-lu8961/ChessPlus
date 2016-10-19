@@ -1,10 +1,10 @@
-package chess;
+package userInterface;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Board extends JPanel implements ActionListener, MouseListener {
+public class ChessUI extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 2L;
 	
 	private int[][] boardState = new int[8][8];
@@ -13,15 +13,17 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 	private JLabel chessMessage;
 	
 	
+	
 	/**
 	 * Constructor that creates the chess panel 
 	 * and its associated components. Adds these 
 	 * components to the panel.
 	 */
-	public Board() {
+	public ChessUI() {
 		setLayout(null);
 		setPreferredSize(new Dimension(700, 600));
 		setBounds(0, 50, 700, 600);
+		setOpaque(false);
 		boardState = setupData();
 		
 		resignButton = new JButton("Resign");
@@ -38,6 +40,10 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 		chessMessage.setBackground(new Color(242, 232, 172));
 		chessMessage.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
 		
+		chess.Board chessBoard = new chess.Board();
+		chessBoard.setBounds(20, 20, 452, 452);
+		
+		add(chessBoard);
 		add(resignButton);
 		add(newGameButton);
 		add(chessMessage);
@@ -52,16 +58,6 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 		return boardState;	
 	}
 	
-	/**
-	 * Paints the chess board.
-	 */
-	public void paintComponent(Graphics paint) {
-		paint.setColor(Color.BLACK);
-		paint.drawRect(20, 20, 450, 450);
-		paint.drawRect(21, 21, 448, 448);		//Draws 2px wide border
-		
-	}
-	
 	public void actionPerformed(ActionEvent evt) {
 		Object src = evt.getSource();
 		if (src == resignButton) {
@@ -72,11 +68,5 @@ public class Board extends JPanel implements ActionListener, MouseListener {
 			chessMessage.repaint();
 		}
 	}
-	public void mouseReleased(MouseEvent mEvt) {}
-	public void mousePressed(MouseEvent mEvt) {}
-	public void mouseClicked(MouseEvent mEvt) {}
-	public void mouseEntered(MouseEvent mEvt) {}
-	public void mouseExited(MouseEvent mEvt) {}
-	
 	
 } //class

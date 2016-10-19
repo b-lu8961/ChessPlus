@@ -22,10 +22,10 @@ public class MainUI extends JPanel implements ActionListener {
 		
 		playChessButton = new JButton("Play chess");
 		playChessButton.addActionListener(this);
-		playChessButton.setBounds(310, 265, 100, 30);
+		playChessButton.setBounds(310, 270, 100, 30);
 		
 		message = new JLabel("Chess+", JLabel.CENTER);
-		message.setBounds(185, 220, 350, 35);
+		message.setBounds(185, 225, 350, 35);
         message.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
         
         add(playChessButton);
@@ -70,7 +70,7 @@ public class MainUI extends JPanel implements ActionListener {
 		Object src = evt.getSource();
 		if (src == playChessButton) {				//If play chess is pressed, remove main menu and put chess board
 			putMenuButton();
-			chess.Board chessBoard = new chess.Board();
+			userInterface.ChessUI chessBoard = new userInterface.ChessUI();
 			add(chessBoard);
 		}
 		else if (src == menuButton)					//If menu is pressed, remove everything and restore the main menu
