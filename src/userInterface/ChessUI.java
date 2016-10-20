@@ -7,7 +7,6 @@ import javax.swing.*;
 public class ChessUI extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 2L;
 	
-	private int[][] boardState = new int[8][8];
 	private JButton resignButton;
 	private JButton newGameButton;
 	private JLabel chessMessage;
@@ -24,7 +23,6 @@ public class ChessUI extends JPanel implements ActionListener {
 		setPreferredSize(new Dimension(700, 600));
 		setBounds(0, 50, 700, 600);
 		setOpaque(false);
-		boardState = setupData();
 		
 		resignButton = new JButton("Resign");
 		resignButton.setBounds(590, 50, 100, 30);
@@ -44,28 +42,25 @@ public class ChessUI extends JPanel implements ActionListener {
 		chessBoard.setBounds(20, 20, 452, 452);
 		
 		add(chessBoard);
+		chessBoard.putPieces();
 		add(resignButton);
 		add(newGameButton);
 		add(chessMessage);
 	} //end constructor
 	
-	public int[][] setupData() {
-		for (int i = 0; i < boardState.length; i++) {
-			for (int k = 0; k < boardState[0].length; k++) {
-				
-			}
-		}
-		return boardState;	
-	}
-	
+	/**
+	 * Perform actions on button presses
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		Object src = evt.getSource();
-		if (src == resignButton) {
-			chessMessage.setText("White/black has resigned. White/black wins.");
+		if (src == resignButton) {		//Need to implement turns
+			chessMessage.setText("White has resigned. Black wins.");
+			validate();
+			repaint();
 		}
-		else if (src == newGameButton) {
+		else if (src == newGameButton) {	//Will also reset chess board in future
 			chessMessage.setText("White: Make your move.");
-			chessMessage.repaint();
+			
 		}
 	}
 	

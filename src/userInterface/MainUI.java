@@ -70,10 +70,10 @@ public class MainUI extends JPanel implements ActionListener {
 		Object src = evt.getSource();
 		if (src == playChessButton) {				//If play chess is pressed, remove main menu and put chess board
 			putMenuButton();
-			userInterface.ChessUI chessBoard = new userInterface.ChessUI();
-			add(chessBoard);
+				userInterface.ChessUI chessBoard = new userInterface.ChessUI();
+				add(chessBoard);
 		}
-		else if (src == menuButton)					//If menu is pressed, remove everything and restore the main menu
+		else if (src == menuButton)				//If menu is pressed, remove everything and restore the main menu
 			showMenu();
 	} //end actionPerformed
 	
