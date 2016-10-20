@@ -9,9 +9,7 @@ public class ChessUI extends JPanel implements ActionListener {
 	
 	private JButton resignButton;
 	private JButton newGameButton;
-	private JLabel chessMessage;
-	
-	
+	private JLabel chessMessage;	
 	
 	/**
 	 * Constructor that creates the chess panel 
@@ -55,8 +53,6 @@ public class ChessUI extends JPanel implements ActionListener {
 		Object src = evt.getSource();
 		if (src == resignButton) {		//Need to implement turns
 			chessMessage.setText("White has resigned. Black wins.");
-			validate();
-			repaint();
 		}
 		else if (src == newGameButton) {	//Will also reset chess board in future
 			chessMessage.setText("White: Make your move.");

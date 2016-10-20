@@ -15,6 +15,7 @@ public class Board extends JPanel {
 	private int[][] boardState = new int[8][8];
 	
 	public Board() {
+		setLayout(null);
 		setOpaque(true);
 		boardState = setupBoard();
 	}
