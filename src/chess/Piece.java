@@ -23,13 +23,30 @@ public enum Piece {
 		this.path = path;
 	}
 	
+	/**
+	 * Returns the number ID of the piece that called
+	 * the method.
+	 * @return number ID associated with the chess piece
+	 */
 	public int num() {
 		return num;
 	}
+	
+	/**
+	 * Returns the file path string of the image for the piece 
+	 * that called the method.
+	 * @return file path of the image for a chess piece
+	 */
 	public String path() {
 		return path;
 	}
 	
+	/**
+	 * Static method that returns the file path for a chess
+	 * piece image given the number of that chess piece. 
+	 * @param  id  number of a chess piece
+	 * @return     the file path of that chess piece as a String
+	 */
 	public static String getPath(int id) {
 		String result = "";
 		for (Piece p : Piece.values()) {
@@ -39,5 +56,5 @@ public enum Piece {
 			}
 		}
 		return result;
-	}
-}
+	} //end getPath
+} //end enum Piece

@@ -14,13 +14,26 @@ public class Board extends JPanel {
 	private BufferedImage chessImage;
 	private int[][] boardState = new int[8][8];
 	
+	/**
+	 * Constructor that sets up layout and initializes
+	 * the boardState array of the chess board.
+	 */
 	public Board() {
 		setLayout(null);
 		setOpaque(true);
 		boardState = setupBoard();
-	}
+	} //end constructor
 	
+	/**
+	 * Initializes boardState array with the values
+	 * of each piece in the correct position for a
+	 * standard chess game.
+	 * @return the boardState array initialized for a regular chess game	
+	 */
 	public int[][] setupBoard() {
+		/*
+		 * Initialize pawns
+		 */
 		for (int i = 1; i < boardState.length - 1; i++) {
 			for (int j = 0; j < boardState[0].length; j++) {
 					if (i == 1) 
@@ -31,6 +44,10 @@ public class Board extends JPanel {
 						boardState[i][j] = Piece.EMPTY.num();
 			}
 		}
+		
+		/*
+		 * Initialize other black pieces
+		 */
 		for (int j = 0; j < boardState[0].length; j++) {
 			if (j == 0 || j == 7)
 				boardState[0][j] = Piece.BLACK_ROOK.num();
@@ -43,6 +60,10 @@ public class Board extends JPanel {
 			else
 				boardState[0][j] = Piece.BLACK_KING.num();
 		}
+		
+		/*
+		 * Initialize other white pieces
+		 */
 		for (int j = 0; j < boardState[0].length; j++) {
 			if (j == 0 || j == 7)
 				boardState[7][j] = Piece.WHITE_ROOK.num();
@@ -56,10 +77,11 @@ public class Board extends JPanel {
 				boardState[7][j] = Piece.WHITE_KING.num();
 		}
 		return boardState;	
-	}
+	} //end setupBoard
 	
 	/**
-	 * Puts piece image in squares according to value in boardState
+	 * Puts piece image in squares according 
+	 * to value in the boardState array.
 	 */
 	public void putPieces() {
 		for (int row = 0; row < 8; row++) {
@@ -76,10 +98,10 @@ public class Board extends JPanel {
 				}
 			}
 		}
-	}
+	} //end putPieces
 	
 	/**
-	 * Paints the chess board.
+	 * Paints the chess board: border and squares.
 	 */
 	public void paintComponent(Graphics paint) {
 		paint.setColor(Color.BLACK);
@@ -95,5 +117,5 @@ public class Board extends JPanel {
 				paint.fillRect(2 + (56 * col), 2 + (56 * row), 56, 56);
 			}
 		}	
-	}
-}
+	} //end paintComponent
+} //end class Board

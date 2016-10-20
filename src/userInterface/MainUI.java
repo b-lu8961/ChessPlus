@@ -33,8 +33,7 @@ public class MainUI extends JPanel implements ActionListener {
 	} //end constructor
 	
 	/**
-	 * Removes everything and restores
-	 * the main menu.
+	 * Removes everything and restores the main menu.
 	 */
 	public void showMenu() {
 		removeAll();
@@ -45,9 +44,8 @@ public class MainUI extends JPanel implements ActionListener {
 	} //end showMenu
 	
 	/**
-	 * Adds the back to main menu button 
-	 * and removes main menu components 
-	 * from the window.
+	 * Adds the back to main menu button and removes
+	 * main menu components from the window.
 	 */
 	public void putMenuButton() {
 		remove(playChessButton);
@@ -63,13 +61,12 @@ public class MainUI extends JPanel implements ActionListener {
 	} //end putMenuButton
 	
 	/**
-	 * If buttons are pressed, do
-	 * the corresponding action.
+	 * If buttons are pressed, do the corresponding action.
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		Object src = evt.getSource();
-		if (src == playChessButton) {				//If play chess is pressed, remove main menu and put chess board
-			putMenuButton();
+		if (src == playChessButton) {			//If play chess is pressed, remove main menu and put chess board
+			putMenuButton();					//Also add menu button to allows users to go back to main menu
 				userInterface.ChessUI chessBoard = new userInterface.ChessUI();
 				add(chessBoard);
 		}
