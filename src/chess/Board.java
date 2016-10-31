@@ -6,13 +6,13 @@ import javax.swing.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import chess.Piece;
+import chess.pieces.*;
 
 public class Board extends JPanel {
 	private static final long serialVersionUID = 3L;
 	
 	private BufferedImage chessImage;
-	private int[][] boardState = new int[8][8];
+	private Piece[][] boardState = new Piece[8][8];
 	
 	/**
 	 * Constructor that sets up layout and initializes
@@ -30,18 +30,18 @@ public class Board extends JPanel {
 	 * standard chess game.
 	 * @return the boardState array initialized for a regular chess game	
 	 */
-	public int[][] setupBoard() {
+	public Piece[][] setupBoard() {
 		/*
 		 * Initialize pawns
 		 */
 		for (int i = 1; i < boardState.length - 1; i++) {
 			for (int j = 0; j < boardState[0].length; j++) {
 					if (i == 1) 
-						boardState[i][j] = Piece.BLACK_PAWN.num();
+						boardState[i][j] = new Pawn(false);
 					else if (i == 6)
-						boardState[i][j] = Piece.WHITE_PAWN.num();
+						boardState[i][j] = new Pawn(true);
 					else 
-						boardState[i][j] = Piece.EMPTY.num();
+						boardState[i][j] = null;
 			}
 		}
 		
@@ -50,15 +50,15 @@ public class Board extends JPanel {
 		 */
 		for (int j = 0; j < boardState[0].length; j++) {
 			if (j == 0 || j == 7)
-				boardState[0][j] = Piece.BLACK_ROOK.num();
+				boardState[0][j] = new Rook(false);
 			else if (j == 1 || j == 6) 
-				boardState[0][j] = Piece.BLACK_KNIGHT.num();
+				boardState[0][j] = new Knight(false);
 			else if (j == 2 || j == 5)
-				boardState[0][j] = Piece.BLACK_BISHOP.num();
+				boardState[0][j] = new Bishop(false);
 			else if (j == 3)
-				boardState[0][j] = Piece.BLACK_QUEEN.num();
+				boardState[0][j] = new Queen(false);
 			else
-				boardState[0][j] = Piece.BLACK_KING.num();
+				boardState[0][j] = new King(false);
 		}
 		
 		/*
@@ -66,15 +66,15 @@ public class Board extends JPanel {
 		 */
 		for (int j = 0; j < boardState[0].length; j++) {
 			if (j == 0 || j == 7)
-				boardState[7][j] = Piece.WHITE_ROOK.num();
+				boardState[7][j] = new Rook(true);
 			else if (j == 1 || j == 6) 
-				boardState[7][j] = Piece.WHITE_KNIGHT.num();
+				boardState[7][j] = new Knight(true);
 			else if (j == 2 || j == 5)
-				boardState[7][j] = Piece.WHITE_BISHOP.num();
+				boardState[7][j] = new Bishop(true);
 			else if (j == 3)
-				boardState[7][j] = Piece.WHITE_QUEEN.num();
+				boardState[7][j] = new Queen(true);
 			else
-				boardState[7][j] = Piece.WHITE_KING.num();
+				boardState[7][j] = new King(true);
 		}
 		return boardState;	
 	} //end setupBoard
@@ -86,9 +86,10 @@ public class Board extends JPanel {
 	public void putPieces() {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
-				if (boardState[row][col] != -1) {
+				if (boardState[row][col] != null) {
+					Piece currentPiece = boardState[row][col];
 					try {
-						chessImage = ImageIO.read(new File(Piece.getPath(boardState[row][col])));
+						chessImage = ImageIO.read(new File(currentPiece.getPath(currentPiece.getColor())));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
