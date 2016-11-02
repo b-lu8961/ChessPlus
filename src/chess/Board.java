@@ -8,11 +8,14 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import chess.pieces.*;
 
-public class Board extends JPanel {
+public class Board extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 3L;
 	
 	private BufferedImage chessImage;
-	private Piece[][] boardState = new Piece[8][8];
+	private static Piece[][] boardState = new Piece[8][8];
+	private boolean turnStatus = true; //true for white, false for black
+	private int selectedRow = -1;
+	private int selectedCol = -1;
 	
 	/**
 	 * Constructor that sets up layout and initializes
@@ -21,8 +24,13 @@ public class Board extends JPanel {
 	public Board() {
 		setLayout(null);
 		setOpaque(true);
+		addMouseListener(this);
 		boardState = setupBoard();
 	} //end constructor
+	
+	public static Piece getSquare(int row, int col) {
+		return boardState[row][col];
+	}
 	
 	/**
 	 * Initializes boardState array with the values
@@ -37,11 +45,11 @@ public class Board extends JPanel {
 		for (int i = 1; i < boardState.length - 1; i++) {
 			for (int j = 0; j < boardState[0].length; j++) {
 					if (i == 1) 
-						boardState[i][j] = new Pawn(false);
+						boardState[j][i] = new Pawn(j, i, false);
 					else if (i == 6)
-						boardState[i][j] = new Pawn(true);
+						boardState[j][i] = new Pawn(j, i, true);
 					else 
-						boardState[i][j] = null;
+						boardState[j][i] = null;
 			}
 		}
 		
@@ -50,15 +58,15 @@ public class Board extends JPanel {
 		 */
 		for (int j = 0; j < boardState[0].length; j++) {
 			if (j == 0 || j == 7)
-				boardState[0][j] = new Rook(false);
+				boardState[j][0] = new Rook(j, 0, false);
 			else if (j == 1 || j == 6) 
-				boardState[0][j] = new Knight(false);
+				boardState[j][0] = new Knight(j, 0, false);
 			else if (j == 2 || j == 5)
-				boardState[0][j] = new Bishop(false);
+				boardState[j][0] = new Bishop(j, 0, false);
 			else if (j == 3)
-				boardState[0][j] = new Queen(false);
+				boardState[j][0] = new Queen(j, 0, false);
 			else
-				boardState[0][j] = new King(false);
+				boardState[j][0] = new King(j, 0, false);
 		}
 		
 		/*
@@ -66,15 +74,15 @@ public class Board extends JPanel {
 		 */
 		for (int j = 0; j < boardState[0].length; j++) {
 			if (j == 0 || j == 7)
-				boardState[7][j] = new Rook(true);
+				boardState[j][7] = new Rook(j, 7, true);
 			else if (j == 1 || j == 6) 
-				boardState[7][j] = new Knight(true);
+				boardState[j][7] = new Knight(j, 7, true);
 			else if (j == 2 || j == 5)
-				boardState[7][j] = new Bishop(true);
+				boardState[j][7] = new Bishop(j, 7, true);
 			else if (j == 3)
-				boardState[7][j] = new Queen(true);
+				boardState[j][7] = new Queen(j, 7, true);
 			else
-				boardState[7][j] = new King(true);
+				boardState[j][7] = new King(j, 7, true);
 		}
 		return boardState;	
 	} //end setupBoard
@@ -94,7 +102,7 @@ public class Board extends JPanel {
 						e.printStackTrace();
 					}
 					JLabel pieceIcon = new JLabel(new ImageIcon(chessImage));
-					pieceIcon.setBounds(5 + (56 * col), 5 + (56 * row), 50, 50);
+					pieceIcon.setBounds(5 + (56 * row), 5 + (56 * col), 50, 50);
 					add(pieceIcon);
 				}
 			}
@@ -117,6 +125,58 @@ public class Board extends JPanel {
 					paint.setColor(Color.GRAY);
 				paint.fillRect(2 + (56 * col), 2 + (56 * row), 56, 56);
 			}
-		}	
+		}
+		
+		/*
+		 * Highlight the square of each piece that has 
+		 * a possible move in green.
+		 */
+		for (int row = 0; row < 8; row++) {
+			for (int col = 0; col < 8; col++) {
+				Piece currentPiece = boardState[row][col];
+				if (currentPiece != null) {
+					if (turnStatus && currentPiece.getColor() && selectedRow == -1) {
+						paint.setColor(Color.GREEN);
+						MoveData[] moveArray = currentPiece.getLegalMoves();
+						if (moveArray != null) {
+							paint.drawRect(2 + (56 * row), 2 + (56 * col), 56, 56);
+							paint.drawRect(3 + (56 * row), 3 + (56 * col), 54, 54);
+						}
+					}
+				}
+			}
+		}
+		
+		/*
+		 * After a click: 
+		 * highlight the square of the selected piece in green, 
+		 * each legal move in blue, and each capture in red.
+		 */
+		if (selectedRow > -1) {
+			Piece selectedPiece = boardState[selectedRow][selectedCol];
+			if (selectedPiece != null && (turnStatus && selectedPiece.getColor())) {
+				paint.setColor(Color.GREEN);
+				paint.drawRect(2 + (56 * selectedRow), 2 + (56 * selectedCol), 56, 56);
+				paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
+				paint.setColor(Color.BLUE);
+				MoveData[] moveArray = selectedPiece.getLegalMoves();
+				for (MoveData move : moveArray) {
+					paint.drawRect(2 + (56 * move.getRow()), 2 + (56 * move.getCol()), 56, 56);
+					paint.drawRect(3 + (56 * move.getRow()), 3 + (56 * move.getCol()), 54, 54);
+				}
+			}
+		}
 	} //end paintComponent
+	
+	public void mousePressed(MouseEvent mEvt) {
+		selectedRow = (mEvt.getX() - 2) / 56;
+		selectedCol = (mEvt.getY() - 2) / 56 ;
+		System.out.println(boardState[selectedRow][selectedCol].getPath(true) + ": " + selectedRow + "," + selectedCol);
+		repaint();
+	}
+	
+	public void mouseEntered(MouseEvent mEvt) {}
+	public void mouseExited(MouseEvent mEvt) {}
+	public void mouseReleased(MouseEvent mEvt) {}
+	public void mouseClicked(MouseEvent mEvt) {}
 } //end class Board
