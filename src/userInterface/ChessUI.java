@@ -41,7 +41,6 @@ public class ChessUI extends JPanel implements ActionListener {
 		chessBoard.setBounds(20, 20, 452, 452);
 		
 		add(chessBoard);
-		//chessBoard.putPieces();
 		add(resignButton);
 		add(newGameButton);
 		add(chessMessage);

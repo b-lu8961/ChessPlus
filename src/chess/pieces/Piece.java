@@ -6,7 +6,7 @@ public abstract class Piece {
 	private String whitePath;
 	private String blackPath;
 	private boolean isWhite;
-	private int row;
+	protected int row;
 	private int col;
 	
 	/**

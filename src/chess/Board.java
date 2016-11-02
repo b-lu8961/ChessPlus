@@ -45,6 +45,9 @@ public class Board extends JPanel implements MouseListener {
 	 * 
 	 */
 	public void setupBoard() {
+		/*
+		 * Initialize game data.
+		 */
 		turnStatus = true;
 		selectedRow = -1;
 		selectedCol = -1;
@@ -99,30 +102,11 @@ public class Board extends JPanel implements MouseListener {
 	} //end setupBoard
 	
 	/**
-	 * Puts piece image in squares according 
-	 * to value in the boardState array.
+	 * Moves a piece from one square to another, as
+	 * governed by the MoveData object parameter. Then resets
+	 * selections and switches turns.
+	 * @param move the move to be executed
 	 */
-	public void putPieces() {
-		for (int row = 0; row < 8; row++) {
-			for (int col = 0; col < 8; col++) {
-				if (boardState[row][col] != null) {
-					Piece currentPiece = boardState[row][col];
-					try {
-						/*if (currentPiece == null)
-							chessImage = ImageIO.read(new File("PieceImages/Chess/EmptyIcon.png"));
-						else*/
-							chessImage = ImageIO.read(new File(currentPiece.getPath(currentPiece.getColor())));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					JLabel pieceIcon = new JLabel(new ImageIcon(chessImage));
-					pieceIcon.setBounds(5 + (56 * row), 5 + (56 * col), 50, 50);
-					add(pieceIcon);
-				}
-			}
-		}
-	} //end putPieces
-	
 	public void makeMove(MoveData move) {
 		Piece movingPiece = move.getPiece();
 		boardState[move.getStartRow()][move.getStartCol()] = null;
@@ -139,7 +123,7 @@ public class Board extends JPanel implements MouseListener {
 		turnStatus = !turnStatus;
 		//putPieces();
 		repaint();
-	}
+	} //end makeMove
 	
 	/**
 	 * Paints the chess board: border and squares.
@@ -184,7 +168,7 @@ public class Board extends JPanel implements MouseListener {
 					if ((turnStatus && currentPiece.getColor()) || (!turnStatus && !currentPiece.getColor())) {
 						paint.setColor(Color.GREEN);
 						MoveData[] moveArray = currentPiece.getLegalMoves();
-						if (moveArray != null) {
+						if (moveArray != null && moveArray.length != 0) {
 							paint.drawRect(2 + (56 * row), 2 + (56 * col), 56, 56);
 							paint.drawRect(3 + (56 * row), 3 + (56 * col), 54, 54);
 						}
@@ -200,7 +184,7 @@ public class Board extends JPanel implements MouseListener {
 		 * each legal move in blue, and each capture in red.
 		 */
 		if (selectedRow > -1) {
-			if (selectedMoves != null && ((turnStatus && selectedPiece.getColor()) || (!turnStatus && !selectedPiece.getColor()))) {
+			if ((turnStatus && selectedPiece.getColor()) || (!turnStatus && !selectedPiece.getColor())) {
 				paint.setColor(Color.ORANGE);
 				paint.drawRect(2 + (56 * selectedRow), 2 + (56 * selectedCol), 56, 56);
 				paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
@@ -235,7 +219,7 @@ public class Board extends JPanel implements MouseListener {
 			}
 		}
 		if (selectedPiece == null) {
-			System.out.println("Null");
+			System.out.println(selectedRow + "," + selectedCol);
 			selectedMoves = null;
 			selectedCol = -1; //So pieces with legal moves will still be highlighted
 			selectedRow = -1;
