@@ -6,12 +6,12 @@ public class Rook extends Piece {
 	private static final String whitePath = "PieceImages/Chess/White/WhiteRook.png";
 	private static final String blackPath = "PieceImages/Chess/Black/BlackRook.png";
 	
-	public Rook(boolean isWhite) {
-		super(whitePath, blackPath, isWhite);
+	public Rook(int row, int col, boolean isWhite) {
+		super(whitePath, blackPath, row, col, isWhite);
 	}
 	
 	@Override
-	MoveData[] getLegalMoves() {
+	public MoveData[] getLegalMoves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -18,4 +18,7 @@ public class MoveData {
 	public int getCol() {
 		return toCol;
 	}
+	public boolean checkCapture() {
+		return isACapture;
+	}
 }
