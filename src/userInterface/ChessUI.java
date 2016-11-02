@@ -9,7 +9,8 @@ public class ChessUI extends JPanel implements ActionListener {
 	
 	private JButton resignButton;
 	private JButton newGameButton;
-	private JLabel chessMessage;	
+	private JLabel chessMessage;
+	private chess.Board chessBoard;
 	
 	/**
 	 * Constructor that creates the chess panel 
@@ -36,11 +37,11 @@ public class ChessUI extends JPanel implements ActionListener {
 		chessMessage.setBackground(new Color(242, 232, 172));
 		chessMessage.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
 		
-		chess.Board chessBoard = new chess.Board();
+		chessBoard = new chess.Board();
 		chessBoard.setBounds(20, 20, 452, 452);
 		
 		add(chessBoard);
-		chessBoard.putPieces();
+		//chessBoard.putPieces();
 		add(resignButton);
 		add(newGameButton);
 		add(chessMessage);
@@ -52,11 +53,16 @@ public class ChessUI extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		Object src = evt.getSource();
 		if (src == resignButton) {		//Need to implement turns
-			chessMessage.setText("White has resigned. Black wins.");
-		}
-		else if (src == newGameButton) {	//Will also reset chess board in future
-			chessMessage.setText("White: Make your move.");
+			if (chessBoard.getTurn())
+				chessMessage.setText("White resigns. Black wins.");
+			else
+				chessMessage.setText("Black resigns. White wins.");
 			
+		}
+		else if (src == newGameButton) {	//Resets chess board and starts new game
+			chessMessage.setText("White: Make your move.");
+			chessBoard.setupBoard();
+			repaint();
 		}
 	}
 	

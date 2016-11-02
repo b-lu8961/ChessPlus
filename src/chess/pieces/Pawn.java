@@ -22,17 +22,17 @@ public class Pawn extends Piece{
 			dY = 1;
 		ArrayList<MoveData> moves = new ArrayList<MoveData>();
 		if ((Board.getSquare(oldRow, oldCol + dY) == null) && (oldCol + dY > -1) && (oldCol + dY < 8)) {
-			moves.add(new MoveData(oldRow, oldCol + dY, false));
+			moves.add(new MoveData(this, oldRow, oldCol, oldRow, oldCol + dY, false));
 			
 			if (!hasMoved && Board.getSquare(oldRow, oldCol + 2*dY) == null) {
-				moves.add(new MoveData(oldRow, oldCol + 2*dY, false));
+				moves.add(new MoveData(this, oldRow, oldCol, oldRow, oldCol + 2*dY, false));
 			}
 		}
 		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
 		return movesArray;
 	}
 	
-	public void setMoveStatus() {
+	public void setMoved() {
 		hasMoved = true;
 	}
 }

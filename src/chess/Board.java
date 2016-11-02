@@ -13,9 +13,11 @@ public class Board extends JPanel implements MouseListener {
 	
 	private BufferedImage chessImage;
 	private static Piece[][] boardState = new Piece[8][8];
-	private boolean turnStatus = true; //true for white, false for black
-	private int selectedRow = -1;
-	private int selectedCol = -1;
+	private boolean turnStatus; //true for white, false for black
+	private int selectedRow;
+	private int selectedCol;
+	private MoveData[] selectedMoves;
+	private Piece selectedPiece;
 	
 	/**
 	 * Constructor that sets up layout and initializes
@@ -25,20 +27,30 @@ public class Board extends JPanel implements MouseListener {
 		setLayout(null);
 		setOpaque(true);
 		addMouseListener(this);
-		boardState = setupBoard();
+		setupBoard();
 	} //end constructor
+	
+	public boolean getTurn() {
+		return turnStatus;
+	}
 	
 	public static Piece getSquare(int row, int col) {
 		return boardState[row][col];
 	}
 	
 	/**
-	 * Initializes boardState array with the values
-	 * of each piece in the correct position for a
-	 * standard chess game.
-	 * @return the boardState array initialized for a regular chess game	
+	 * Initializes boardState array with each piece 
+	 * in the correct position for a standard chess game.
+	 * Also resets turn status and selected things.
+	 * 
 	 */
-	public Piece[][] setupBoard() {
+	public void setupBoard() {
+		turnStatus = true;
+		selectedRow = -1;
+		selectedCol = -1;
+		selectedMoves = null;
+		selectedPiece = null;
+		
 		/*
 		 * Initialize pawns
 		 */
@@ -83,8 +95,7 @@ public class Board extends JPanel implements MouseListener {
 				boardState[j][7] = new Queen(j, 7, true);
 			else
 				boardState[j][7] = new King(j, 7, true);
-		}
-		return boardState;	
+		}	
 	} //end setupBoard
 	
 	/**
@@ -97,7 +108,10 @@ public class Board extends JPanel implements MouseListener {
 				if (boardState[row][col] != null) {
 					Piece currentPiece = boardState[row][col];
 					try {
-						chessImage = ImageIO.read(new File(currentPiece.getPath(currentPiece.getColor())));
+						/*if (currentPiece == null)
+							chessImage = ImageIO.read(new File("PieceImages/Chess/EmptyIcon.png"));
+						else*/
+							chessImage = ImageIO.read(new File(currentPiece.getPath(currentPiece.getColor())));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -109,6 +123,24 @@ public class Board extends JPanel implements MouseListener {
 		}
 	} //end putPieces
 	
+	public void makeMove(MoveData move) {
+		Piece movingPiece = move.getPiece();
+		boardState[move.getStartRow()][move.getStartCol()] = null;
+		boardState[move.getEndRow()][move.getEndCol()] = movingPiece;
+		movingPiece.setRow(move.getEndRow());
+		movingPiece.setCol(move.getEndCol());
+		if (movingPiece instanceof Pawn) {
+			Pawn movedPawn = (Pawn)movingPiece;
+			movedPawn.setMoved();
+		}
+		selectedMoves = null;
+		selectedRow = -1;
+		selectedCol = -1;
+		turnStatus = !turnStatus;
+		//putPieces();
+		repaint();
+	}
+	
 	/**
 	 * Paints the chess board: border and squares.
 	 */
@@ -119,14 +151,28 @@ public class Board extends JPanel implements MouseListener {
 		
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
-				if ((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1))
-					paint.setColor(Color.WHITE);
-				else 
-					paint.setColor(Color.GRAY);
-				paint.fillRect(2 + (56 * col), 2 + (56 * row), 56, 56);
+				Color bgColor;
+				if ((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1)) {
+					//paint.setColor(Color.WHITE);
+					bgColor = Color.WHITE;
+				}
+				else { 
+					//paint.setColor(Color.GRAY);
+					bgColor = Color.GRAY;
+				}
+				Piece currentPiece = boardState[row][col];
+				try {
+					if (currentPiece == null)
+						chessImage = ImageIO.read(new File("PieceImages/Chess/EmptyIcon.png"));
+					else
+						chessImage = ImageIO.read(new File(currentPiece.getPath(currentPiece.getColor())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				//paint.fillRect(2 + (56 * col), 2 + (56 * row), 56, 56);
+				paint.drawImage(chessImage, 2 + (56 * row), 2 + (56 * col), bgColor, this);
 			}
 		}
-		
 		/*
 		 * Highlight the square of each piece that has 
 		 * a possible move in green.
@@ -135,7 +181,7 @@ public class Board extends JPanel implements MouseListener {
 			for (int col = 0; col < 8; col++) {
 				Piece currentPiece = boardState[row][col];
 				if (currentPiece != null) {
-					if (turnStatus && currentPiece.getColor() && selectedRow == -1) {
+					if ((turnStatus && currentPiece.getColor()) || (!turnStatus && !currentPiece.getColor())) {
 						paint.setColor(Color.GREEN);
 						MoveData[] moveArray = currentPiece.getLegalMoves();
 						if (moveArray != null) {
@@ -147,31 +193,57 @@ public class Board extends JPanel implements MouseListener {
 			}
 		}
 		
+		
 		/*
 		 * After a click: 
-		 * highlight the square of the selected piece in green, 
+		 * highlight the square of the selected piece in orange, 
 		 * each legal move in blue, and each capture in red.
 		 */
 		if (selectedRow > -1) {
-			Piece selectedPiece = boardState[selectedRow][selectedCol];
-			if (selectedPiece != null && (turnStatus && selectedPiece.getColor())) {
-				paint.setColor(Color.GREEN);
+			if (selectedMoves != null && ((turnStatus && selectedPiece.getColor()) || (!turnStatus && !selectedPiece.getColor()))) {
+				paint.setColor(Color.ORANGE);
 				paint.drawRect(2 + (56 * selectedRow), 2 + (56 * selectedCol), 56, 56);
 				paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
-				paint.setColor(Color.BLUE);
-				MoveData[] moveArray = selectedPiece.getLegalMoves();
-				for (MoveData move : moveArray) {
-					paint.drawRect(2 + (56 * move.getRow()), 2 + (56 * move.getCol()), 56, 56);
-					paint.drawRect(3 + (56 * move.getRow()), 3 + (56 * move.getCol()), 54, 54);
+				
+				for (MoveData move : selectedMoves) {
+					if (move.checkCapture())
+						paint.setColor(Color.RED);
+					else
+						paint.setColor(Color.BLUE);
+					paint.drawRect(2 + (56 * move.getEndRow()), 2 + (56 * move.getEndCol()), 56, 56);
+					paint.drawRect(3 + (56 * move.getEndRow()), 3 + (56 * move.getEndCol()), 54, 54);
 				}
 			}
 		}
 	} //end paintComponent
 	
+	/**
+	 * Changes the selected piece to the piece in the
+	 * square that was clicked on and repaints the board
+	 * accordingly.
+	 */
 	public void mousePressed(MouseEvent mEvt) {
 		selectedRow = (mEvt.getX() - 2) / 56;
 		selectedCol = (mEvt.getY() - 2) / 56 ;
-		System.out.println(boardState[selectedRow][selectedCol].getPath(true) + ": " + selectedRow + "," + selectedCol);
+		selectedPiece = boardState[selectedRow][selectedCol];
+		if (selectedMoves != null) {
+			for (MoveData move : selectedMoves) {
+				if (selectedRow == move.getEndRow() && selectedCol == move.getEndCol()) {
+					makeMove(move);
+					break;
+				}
+			}
+		}
+		if (selectedPiece == null) {
+			System.out.println("Null");
+			selectedMoves = null;
+			selectedCol = -1; //So pieces with legal moves will still be highlighted
+			selectedRow = -1;
+		}
+		else {
+			selectedMoves = selectedPiece.getLegalMoves();
+			System.out.println(selectedPiece.getClass() + ": " + selectedRow + "," + selectedCol);
+		}
 		repaint();
 	}
 	
