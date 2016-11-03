@@ -18,6 +18,7 @@ public class Board extends JPanel implements MouseListener {
 	private int selectedCol;
 	private MoveData[] selectedMoves;
 	private Piece selectedPiece;
+	private boolean isEnabled = true;
 	
 	/**
 	 * Constructor that sets up layout and initializes
@@ -48,6 +49,7 @@ public class Board extends JPanel implements MouseListener {
 		/*
 		 * Initialize game data.
 		 */
+		isEnabled = true;
 		turnStatus = true;
 		selectedRow = -1;
 		selectedCol = -1;
@@ -100,6 +102,10 @@ public class Board extends JPanel implements MouseListener {
 				boardState[j][7] = new King(j, 7, true);
 		}	
 	} //end setupBoard
+	
+	public void disable() {
+		isEnabled = false;
+	}
 	
 	/**
 	 * Moves a piece from one square to another, as
@@ -161,16 +167,18 @@ public class Board extends JPanel implements MouseListener {
 		 * Highlight the square of each piece that has 
 		 * a possible move in green.
 		 */
-		for (int row = 0; row < 8; row++) {
-			for (int col = 0; col < 8; col++) {
-				Piece currentPiece = boardState[row][col];
-				if (currentPiece != null) {
-					if ((turnStatus && currentPiece.getColor()) || (!turnStatus && !currentPiece.getColor())) {
-						paint.setColor(Color.GREEN);
-						MoveData[] moveArray = currentPiece.getLegalMoves();
-						if (moveArray != null && moveArray.length != 0) {
-							paint.drawRect(2 + (56 * row), 2 + (56 * col), 56, 56);
-							paint.drawRect(3 + (56 * row), 3 + (56 * col), 54, 54);
+		if (isEnabled) {
+			for (int row = 0; row < 8; row++) {
+				for (int col = 0; col < 8; col++) {
+					Piece currentPiece = boardState[row][col];
+					if (currentPiece != null) {
+						if ((turnStatus && currentPiece.getColor()) || (!turnStatus && !currentPiece.getColor())) {
+							paint.setColor(Color.GREEN);
+							MoveData[] moveArray = currentPiece.getLegalMoves();
+							if (moveArray != null && moveArray.length != 0) {
+								paint.drawRect(2 + (56 * row), 2 + (56 * col), 56, 56);
+								paint.drawRect(3 + (56 * row), 3 + (56 * col), 54, 54);
+							}
 						}
 					}
 				}
@@ -184,7 +192,7 @@ public class Board extends JPanel implements MouseListener {
 		 * each legal move in blue, and each capture in red.
 		 */
 		if (selectedRow > -1) {
-			if ((turnStatus && selectedPiece.getColor()) || (!turnStatus && !selectedPiece.getColor())) {
+			if (selectedMoves != null && (turnStatus && selectedPiece.getColor()) || (!turnStatus && !selectedPiece.getColor())) {
 				paint.setColor(Color.ORANGE);
 				paint.drawRect(2 + (56 * selectedRow), 2 + (56 * selectedCol), 56, 56);
 				paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
@@ -207,28 +215,30 @@ public class Board extends JPanel implements MouseListener {
 	 * accordingly.
 	 */
 	public void mousePressed(MouseEvent mEvt) {
-		selectedRow = (mEvt.getX() - 2) / 56;
-		selectedCol = (mEvt.getY() - 2) / 56 ;
-		selectedPiece = boardState[selectedRow][selectedCol];
-		if (selectedMoves != null) {
-			for (MoveData move : selectedMoves) {
-				if (selectedRow == move.getEndRow() && selectedCol == move.getEndCol()) {
-					makeMove(move);
-					break;
+		if (isEnabled) {
+			selectedRow = (mEvt.getX() - 2) / 56;
+			selectedCol = (mEvt.getY() - 2) / 56 ;
+			selectedPiece = boardState[selectedRow][selectedCol];
+			if (selectedMoves != null) {
+				for (MoveData move : selectedMoves) {
+					if (selectedRow == move.getEndRow() && selectedCol == move.getEndCol()) {
+						makeMove(move);
+						break;
+					}
 				}
 			}
+			if (selectedPiece == null) {
+				System.out.println(selectedRow + "," + selectedCol);
+				selectedMoves = null;
+				selectedCol = -1; //So pieces with legal moves will still be highlighted
+				selectedRow = -1;
+			}
+			else {
+				selectedMoves = selectedPiece.getLegalMoves();
+				System.out.println(selectedPiece.getClass() + ": " + selectedRow + "," + selectedCol);
+			}
+			repaint();
 		}
-		if (selectedPiece == null) {
-			System.out.println(selectedRow + "," + selectedCol);
-			selectedMoves = null;
-			selectedCol = -1; //So pieces with legal moves will still be highlighted
-			selectedRow = -1;
-		}
-		else {
-			selectedMoves = selectedPiece.getLegalMoves();
-			System.out.println(selectedPiece.getClass() + ": " + selectedRow + "," + selectedCol);
-		}
-		repaint();
 	}
 	
 	public void mouseEntered(MouseEvent mEvt) {}

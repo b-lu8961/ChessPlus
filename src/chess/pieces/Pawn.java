@@ -12,7 +12,7 @@ public class Pawn extends Piece{
 		super(whitePath, blackPath, row, col, isWhite);
 	}
 	
-	public MoveData[] getLegalMoves() {
+	public MoveData[] getLegalMoves() { //Need en passant
 		int oldRow = row;
 		int oldCol = this.getCol();
 		int dY;
@@ -30,12 +30,16 @@ public class Pawn extends Piece{
 			}
 		}
 		if ((oldRow + 1 < 8) && (oldCol + dY > -1) && (oldCol + dY < 8)) {
-			if (Board.getSquare(oldRow + 1, oldCol + dY) instanceof Piece)
-				moves.add(new MoveData(this, oldRow, oldCol, oldRow + 1, oldCol + dY, true));	
+			if (Board.getSquare(oldRow + 1, oldCol + dY) instanceof Piece) {
+				if (Board.getSquare(oldRow + 1, oldCol + dY).getColor() != getColor())
+					moves.add(new MoveData(this, oldRow, oldCol, oldRow + 1, oldCol + dY, true));
+			}
 		}
 		if ((oldRow - 1 > -1) && (oldCol + dY > -1) && (oldCol + dY < 8)) {
-			if (Board.getSquare(oldRow - 1, oldCol + dY) instanceof Piece)
-				moves.add(new MoveData(this, oldRow, oldCol, oldRow - 1, oldCol + dY, true));
+			if (Board.getSquare(oldRow - 1, oldCol + dY) instanceof Piece) {
+				if (Board.getSquare(oldRow - 1, oldCol + dY).getColor() != getColor())
+					moves.add(new MoveData(this, oldRow, oldCol, oldRow - 1, oldCol + dY, true));
+			}
 		}
 		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
 		return movesArray;

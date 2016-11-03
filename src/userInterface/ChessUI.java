@@ -56,7 +56,7 @@ public class ChessUI extends JPanel implements ActionListener {
 				chessMessage.setText("White resigns. Black wins.");
 			else
 				chessMessage.setText("Black resigns. White wins.");
-			
+			chessBoard.setEnabled(false);
 		}
 		else if (src == newGameButton) {	//Resets chess board and starts new game
 			chessMessage.setText("White: Make your move.");
