@@ -103,6 +103,10 @@ public class Board extends JPanel implements MouseListener {
 		}	
 	} //end setupBoard
 	
+	/**
+	 * Disables changing anything on the chess board and 
+	 * removes all square highlighting.
+	 */
 	public void disable() {
 		isEnabled = false;
 	}
@@ -127,7 +131,6 @@ public class Board extends JPanel implements MouseListener {
 		selectedRow = -1;
 		selectedCol = -1;
 		turnStatus = !turnStatus;
-		//putPieces();
 		repaint();
 	} //end makeMove
 	
@@ -222,8 +225,10 @@ public class Board extends JPanel implements MouseListener {
 			if (selectedMoves != null) {
 				for (MoveData move : selectedMoves) {
 					if (selectedRow == move.getEndRow() && selectedCol == move.getEndCol()) {
-						makeMove(move);
-						break;
+						if ((turnStatus && move.getPiece().getColor()) || (!turnStatus && !move.getPiece().getColor())) {
+							makeMove(move);
+							break;
+						}
 					}
 				}
 			}

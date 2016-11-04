@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class ChessUI extends JPanel implements ActionListener {
+public class ChessUI extends JPanel implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 2L;
 	
 	private JButton resignButton;
@@ -39,6 +39,7 @@ public class ChessUI extends JPanel implements ActionListener {
 		
 		chessBoard = new chess.Board();
 		chessBoard.setBounds(20, 20, 452, 452);
+		chessBoard.addMouseListener(this);
 		
 		add(chessBoard);
 		add(resignButton);
@@ -63,6 +64,21 @@ public class ChessUI extends JPanel implements ActionListener {
 			chessBoard.setupBoard();
 			repaint();
 		}
-	}
+	} //end actionPerformed
 	
+	/**
+	 * Mouse listener updates text based on whose turn
+	 * it is in the game.
+	 */
+	public void mousePressed(MouseEvent mEvt) {
+		if (chessBoard.getTurn()) 
+			chessMessage.setText("White: Make your move.");
+		else 
+			chessMessage.setText("Black: Make your move.");
+	} //end mousePressed
+	
+	public void mouseEntered(MouseEvent mEvt) {}
+	public void mouseExited(MouseEvent mEvt) {}
+	public void mouseReleased(MouseEvent mEvt) {}
+	public void mouseClicked(MouseEvent mEvt) {}
 } //class
