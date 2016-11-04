@@ -1,5 +1,7 @@
 package chess.pieces;
 
+import java.util.ArrayList;
+
 import chess.MoveData;
 
 public class Rook extends Piece {
@@ -12,8 +14,9 @@ public class Rook extends Piece {
 	
 	@Override
 	public MoveData[] getLegalMoves() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<MoveData> moves = new ArrayList<MoveData>();
+		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
+		return movesArray;
 	}
 
 }

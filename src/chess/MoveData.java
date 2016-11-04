@@ -26,7 +26,7 @@ public class MoveData {
 		this.toRow = toRow;
 		this.toCol = toCol;
 		isACapture = capture;
-	}
+	} //end constructor
 	
 	public Piece getPiece() {
 		return startPiece;
