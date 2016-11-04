@@ -57,6 +57,8 @@ public class ChessUI extends JPanel implements ActionListener, MouseListener {
 				chessMessage.setText("White resigns. Black wins.");
 			else
 				chessMessage.setText("Black resigns. White wins.");
+			chessBoard.disableBoard();
+			repaint();
 			chessBoard.setEnabled(false);
 		}
 		else if (src == newGameButton) {	//Resets chess board and starts new game
@@ -71,10 +73,12 @@ public class ChessUI extends JPanel implements ActionListener, MouseListener {
 	 * it is in the game.
 	 */
 	public void mousePressed(MouseEvent mEvt) {
-		if (chessBoard.getTurn()) 
-			chessMessage.setText("White: Make your move.");
-		else 
-			chessMessage.setText("Black: Make your move.");
+		if (chessBoard.isEnabled()) {
+			if (chessBoard.getTurn()) 
+				chessMessage.setText("White: Make your move.");
+			else 
+				chessMessage.setText("Black: Make your move.");
+		}
 	} //end mousePressed
 	
 	public void mouseEntered(MouseEvent mEvt) {}

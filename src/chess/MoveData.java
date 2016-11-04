@@ -1,9 +1,6 @@
 package chess;
 
-import chess.pieces.Piece;
-
 public class MoveData {
-	private Piece startPiece;
 	private int toRow;
 	private int toCol;
 	private int fromRow;
@@ -19,18 +16,13 @@ public class MoveData {
 	 * @param toCol 	ending column of moving piece
 	 * @param capture 	true if move is a capture, else is false
 	 */
-	public MoveData(Piece startPiece, int fromRow, int fromCol, int toRow, int toCol, boolean capture) {
-		this.startPiece = startPiece;
+	public MoveData(int fromRow, int fromCol, int toRow, int toCol, boolean capture) {
 		this.fromRow = fromRow;
 		this.fromCol = fromCol;
 		this.toRow = toRow;
 		this.toCol = toCol;
 		isACapture = capture;
 	} //end constructor
-	
-	public Piece getPiece() {
-		return startPiece;
-	}
 	
 	public int getStartRow() {
 		return fromRow;

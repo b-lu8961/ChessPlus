@@ -27,12 +27,12 @@ public class Rook extends Piece {
 				//Captures
 				if (Board.getSquare(row + i, col) instanceof Piece) {
 					if (Board.getSquare(row + i, col).getColor() != isWhite)
-						moves.add(new MoveData(this, row, col, row + i, col, true));
+						moves.add(new MoveData(row, col, row + i, col, true));
 					checkEast = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(this, row, col, row + i, col, false));
+					moves.add(new MoveData(row, col, row + i, col, false));
 			}
 			
 			//West squares
@@ -40,12 +40,12 @@ public class Rook extends Piece {
 				//Captures
 				if (Board.getSquare(row - i, col) instanceof Piece) {
 					if (Board.getSquare(row - i, col).getColor() != isWhite)
-						moves.add(new MoveData(this, row, col, row - i, col, true));
+						moves.add(new MoveData(row, col, row - i, col, true));
 					checkWest = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(this, row, col, row - i, col, false));
+					moves.add(new MoveData(row, col, row - i, col, false));
 			}
 			
 			//South squares
@@ -53,12 +53,12 @@ public class Rook extends Piece {
 				//Captures
 				if (Board.getSquare(row, col + i) instanceof Piece) {
 					if (Board.getSquare(row, col + i).getColor() != isWhite)
-						moves.add(new MoveData(this, row, col, row, col + i, true));
+						moves.add(new MoveData(row, col, row, col + i, true));
 					checkSouth = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(this, row, col, row, col + i, false));
+					moves.add(new MoveData(row, col, row, col + i, false));
 			}
 			
 			//North squares
@@ -66,12 +66,12 @@ public class Rook extends Piece {
 				//Captures
 				if (Board.getSquare(row, col - i) instanceof Piece) {
 					if (Board.getSquare(row, col - i).getColor() != isWhite)
-						moves.add(new MoveData(this, row, col, row, col - i, true));
+						moves.add(new MoveData(row, col, row, col - i, true));
 					checkNorth = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(this, row, col, row, col - i, false));
+					moves.add(new MoveData(row, col, row, col - i, false));
 			}
 		}
 		

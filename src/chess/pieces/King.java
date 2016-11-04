@@ -13,7 +13,7 @@ public class King extends Piece {
 		super(whitePath, blackPath, row, col, isWhite);
 	}
 	
-	//Need to implement check & checkmate situations
+	//Need to implement check & checkmate situations, castling with rook
 	
 	@Override
 	public MoveData[] getLegalMoves() {
@@ -25,11 +25,11 @@ public class King extends Piece {
 						//Captures
 						if (Board.getSquare(row + i, col + j) instanceof Piece) {
 							if (Board.getSquare(row + i, col + j).getColor() != isWhite)
-								moves.add(new MoveData(this, row, col, row + i, col + j, true));
+								moves.add(new MoveData(row, col, row + i, col + j, true));
 						}
 						//Moves
 						else
-							moves.add(new MoveData(this, row, col, row + i, col + j, false));
+							moves.add(new MoveData(row, col, row + i, col + j, false));
 					}
 				}
 			}

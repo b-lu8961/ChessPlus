@@ -107,7 +107,7 @@ public class Board extends JPanel implements MouseListener {
 	 * Disables changing anything on the chess board and 
 	 * removes all square highlighting.
 	 */
-	public void disable() {
+	public void disableBoard() {
 		isEnabled = false;
 	}
 	
@@ -118,7 +118,7 @@ public class Board extends JPanel implements MouseListener {
 	 * @param move the move to be executed
 	 */
 	public void makeMove(MoveData move) {
-		Piece movingPiece = move.getPiece();
+		Piece movingPiece = selectedPiece; //move.getPiece();
 		boardState[move.getStartRow()][move.getStartCol()] = null;
 		boardState[move.getEndRow()][move.getEndCol()] = movingPiece;
 		movingPiece.setRow(move.getEndRow());
@@ -128,8 +128,6 @@ public class Board extends JPanel implements MouseListener {
 			movedPawn.setMoved();
 		}
 		selectedMoves = null;
-		selectedRow = -1;
-		selectedCol = -1;
 		turnStatus = !turnStatus;
 		repaint();
 	} //end makeMove
@@ -194,19 +192,21 @@ public class Board extends JPanel implements MouseListener {
 		 * highlight the square of the selected piece in orange, 
 		 * each legal move in blue, and each capture in red.
 		 */
-		if (selectedRow > -1) {
-			if (selectedMoves != null && (turnStatus && selectedPiece.getColor()) || (!turnStatus && !selectedPiece.getColor())) {
-				paint.setColor(Color.ORANGE);
-				paint.drawRect(2 + (56 * selectedRow), 2 + (56 * selectedCol), 56, 56);
-				paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
-				
-				for (MoveData move : selectedMoves) {
-					if (move.checkCapture())
-						paint.setColor(Color.RED);
-					else
-						paint.setColor(Color.BLUE);
-					paint.drawRect(2 + (56 * move.getEndRow()), 2 + (56 * move.getEndCol()), 56, 56);
-					paint.drawRect(3 + (56 * move.getEndRow()), 3 + (56 * move.getEndCol()), 54, 54);
+		if (isEnabled) {
+			if (selectedRow > -1) {
+				if (selectedMoves != null && (turnStatus && selectedPiece.getColor()) || (!turnStatus && !selectedPiece.getColor())) {
+					paint.setColor(Color.ORANGE);
+					paint.drawRect(2 + (56 * selectedRow), 2 + (56 * selectedCol), 56, 56);
+					paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
+					
+					for (MoveData move : selectedMoves) {
+						if (move.checkCapture())
+							paint.setColor(Color.RED);
+						else
+							paint.setColor(Color.BLUE);
+						paint.drawRect(2 + (56 * move.getEndRow()), 2 + (56 * move.getEndCol()), 56, 56);
+						paint.drawRect(3 + (56 * move.getEndRow()), 3 + (56 * move.getEndCol()), 54, 54);
+					}
 				}
 			}
 		}
@@ -221,17 +221,17 @@ public class Board extends JPanel implements MouseListener {
 		if (isEnabled) {
 			selectedRow = (mEvt.getX() - 2) / 56;
 			selectedCol = (mEvt.getY() - 2) / 56 ;
-			selectedPiece = boardState[selectedRow][selectedCol];
 			if (selectedMoves != null) {
 				for (MoveData move : selectedMoves) {
 					if (selectedRow == move.getEndRow() && selectedCol == move.getEndCol()) {
-						if ((turnStatus && move.getPiece().getColor()) || (!turnStatus && !move.getPiece().getColor())) {
+						if ((turnStatus && selectedPiece.getColor()) || (!turnStatus && !selectedPiece.getColor())) {
 							makeMove(move);
 							break;
 						}
 					}
 				}
 			}
+			selectedPiece = boardState[selectedRow][selectedCol];
 			if (selectedPiece == null) {
 				System.out.println(selectedRow + "," + selectedCol);
 				selectedMoves = null;

@@ -26,13 +26,13 @@ public class Pawn extends Piece{
 		/*
 		 * One square ahead
 		 */
-		if ((Board.getSquare(row, col + dY) == null) && (col + dY > -1) && (col + dY < 8)) {
-			moves.add(new MoveData(this, row, col, row, col + dY, false));
+		if ((col + dY > -1) && (col + dY < 8) && (Board.getSquare(row, col + dY) == null)) {
+			moves.add(new MoveData(row, col, row, col + dY, false));
 			/*
 			 * Two squares ahead if haven't moved 
 			 */
 			if (!hasMoved && Board.getSquare(row, col + 2*dY) == null) {
-				moves.add(new MoveData(this, row, col, row, col + 2*dY, false));
+				moves.add(new MoveData(row, col, row, col + 2*dY, false));
 			}
 		}
 		
@@ -42,13 +42,13 @@ public class Pawn extends Piece{
 		if ((row + 1 < 8) && (col + dY > -1) && (col + dY < 8)) {
 			if (Board.getSquare(row + 1, col + dY) instanceof Piece) {
 				if (Board.getSquare(row + 1, col + dY).getColor() != isWhite)
-					moves.add(new MoveData(this, row, col, row + 1, col + dY, true));
+					moves.add(new MoveData(row, col, row + 1, col + dY, true));
 			}
 		}
 		if ((row - 1 > -1) && (col + dY > -1) && (col + dY < 8)) {
 			if (Board.getSquare(row - 1, col + dY) instanceof Piece) {
 				if (Board.getSquare(row - 1, col + dY).getColor() != isWhite)
-					moves.add(new MoveData(this, row, col, row - 1, col + dY, true));
+					moves.add(new MoveData(row, col, row - 1, col + dY, true));
 			}
 		}
 		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);

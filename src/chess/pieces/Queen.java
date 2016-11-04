@@ -14,8 +14,25 @@ public class Queen extends Piece {
 	
 	@Override
 	public MoveData[] getLegalMoves() {
-		ArrayList<MoveData> moves = new ArrayList<MoveData>();
-		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
+		MoveData[] rookArray;
+		MoveData[] bishopArray;
+		Rook ghostRook = new Rook(row, col, isWhite);
+		rookArray = ghostRook.getLegalMoves();
+		
+		Bishop ghostBishop = new Bishop(row, col, isWhite);
+		bishopArray = ghostBishop.getLegalMoves();
+		
+		int total = rookArray.length + bishopArray.length;
+		MoveData[] movesArray = new MoveData[total];
+		for (int i = 0; i < total; i++) {
+			if (i < rookArray.length) {
+				movesArray[i] = rookArray[i];
+			}
+			else
+				movesArray[i] = bishopArray[i - rookArray.length];
+		}
+		//ArrayList<MoveData> moves = new ArrayList<MoveData>();
+		//MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
 		return movesArray;
 	}
 

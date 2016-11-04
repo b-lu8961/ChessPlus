@@ -22,11 +22,11 @@ public class Knight extends Piece {
 						//Captures
 						if (Board.getSquare(row + i, col + j) instanceof Piece) {
 							if (Board.getSquare(row + i, col + j).getColor() != isWhite)
-								moves.add(new MoveData(this, row, col, row + i, col + j, true));
+								moves.add(new MoveData(row, col, row + i, col + j, true));
 						}
 						//Moves
 						else
-							moves.add(new MoveData(this, row, col, row + i, col + j, false));
+							moves.add(new MoveData(row, col, row + i, col + j, false));
 					}
 				}
 			}
