@@ -5,9 +5,9 @@ import chess.MoveData;
 public abstract class Piece {
 	private String whitePath;
 	private String blackPath;
-	private boolean isWhite;
+	protected boolean isWhite;
 	protected int row;
-	private int col;
+	protected int col;
 	
 	/**
 	 * Constructor that initializes the color and file paths for
@@ -69,5 +69,10 @@ public abstract class Piece {
 			return blackPath;
 	}
 	
+	/**
+	 * Finds the legal moves of the selected piece and
+	 * returns those moves in an array of MoveData objects.
+	 * @return an array of MoveData objects containing the piece's legal moves
+	 */
 	public abstract MoveData[] getLegalMoves();
 }

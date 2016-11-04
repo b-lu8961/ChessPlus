@@ -12,33 +12,43 @@ public class Pawn extends Piece{
 		super(whitePath, blackPath, row, col, isWhite);
 	}
 	
-	public MoveData[] getLegalMoves() { //Need en passant
-		int oldRow = row;
-		int oldCol = this.getCol();
+	//Need to implement en passant, pawn promotion
+
+	@Override
+	public MoveData[] getLegalMoves() { 
 		int dY;
-		if (getColor())
-			dY = -1;
+		if (isWhite)
+			dY = -1; //Moves up board if white
 		else
-			dY = 1;
+			dY = 1; //Moves down board if black
 		
 		ArrayList<MoveData> moves = new ArrayList<MoveData>();
-		if ((Board.getSquare(oldRow, oldCol + dY) == null) && (oldCol + dY > -1) && (oldCol + dY < 8)) {
-			moves.add(new MoveData(this, oldRow, oldCol, oldRow, oldCol + dY, false));
-			
-			if (!hasMoved && Board.getSquare(oldRow, oldCol + 2*dY) == null) {
-				moves.add(new MoveData(this, oldRow, oldCol, oldRow, oldCol + 2*dY, false));
+		/*
+		 * One square ahead
+		 */
+		if ((Board.getSquare(row, col + dY) == null) && (col + dY > -1) && (col + dY < 8)) {
+			moves.add(new MoveData(this, row, col, row, col + dY, false));
+			/*
+			 * Two squares ahead if haven't moved 
+			 */
+			if (!hasMoved && Board.getSquare(row, col + 2*dY) == null) {
+				moves.add(new MoveData(this, row, col, row, col + 2*dY, false));
 			}
 		}
-		if ((oldRow + 1 < 8) && (oldCol + dY > -1) && (oldCol + dY < 8)) {
-			if (Board.getSquare(oldRow + 1, oldCol + dY) instanceof Piece) {
-				if (Board.getSquare(oldRow + 1, oldCol + dY).getColor() != getColor())
-					moves.add(new MoveData(this, oldRow, oldCol, oldRow + 1, oldCol + dY, true));
+		
+		/*
+		 * Captures
+		 */
+		if ((row + 1 < 8) && (col + dY > -1) && (col + dY < 8)) {
+			if (Board.getSquare(row + 1, col + dY) instanceof Piece) {
+				if (Board.getSquare(row + 1, col + dY).getColor() != isWhite)
+					moves.add(new MoveData(this, row, col, row + 1, col + dY, true));
 			}
 		}
-		if ((oldRow - 1 > -1) && (oldCol + dY > -1) && (oldCol + dY < 8)) {
-			if (Board.getSquare(oldRow - 1, oldCol + dY) instanceof Piece) {
-				if (Board.getSquare(oldRow - 1, oldCol + dY).getColor() != getColor())
-					moves.add(new MoveData(this, oldRow, oldCol, oldRow - 1, oldCol + dY, true));
+		if ((row - 1 > -1) && (col + dY > -1) && (col + dY < 8)) {
+			if (Board.getSquare(row - 1, col + dY) instanceof Piece) {
+				if (Board.getSquare(row - 1, col + dY).getColor() != isWhite)
+					moves.add(new MoveData(this, row, col, row - 1, col + dY, true));
 			}
 		}
 		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
