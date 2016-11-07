@@ -26,52 +26,68 @@ public class Bishop extends Piece {
 			if (checkSE && row + i < 8 && col + i < 8) {
 				//Captures
 				if (Board.getSquare(row + i, col + i) instanceof Piece) {
-					if (Board.getSquare(row + i, col + i).getColor() != isWhite)
-						moves.add(new MoveData(row, col, row + i, col + i, true));
+					if (Board.getSquare(row + i, col + i).getColor() != isWhite) {
+						if (Board.getSquare(row + i, col + i) instanceof King)
+							moves.add(new MoveData(row, col, row + i, col + i, MoveData.CHECK));
+						else
+							moves.add(new MoveData(row, col, row + i, col + i, MoveData.CAPTURE));
+					}
 					checkSE = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(row, col, row + i, col + i, false));
+					moves.add(new MoveData(row, col, row + i, col + i, MoveData.MOVE));
 			}
 			
 			//NW squares
 			if (checkNW && row - i > -1 && col - i > -1) {
 				//Captures
 				if (Board.getSquare(row - i, col - i) instanceof Piece) {
-					if (Board.getSquare(row - i, col - i).getColor() != isWhite)
-						moves.add(new MoveData(row, col, row - i, col - i, true));
+					if (Board.getSquare(row - i, col - i).getColor() != isWhite) {
+						if (Board.getSquare(row - i, col - i) instanceof King)
+							moves.add(new MoveData(row, col, row - i, col - i, MoveData.CHECK));
+						else
+							moves.add(new MoveData(row, col, row - i, col - i, MoveData.CAPTURE));
+					}
 					checkNW = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(row, col, row - i, col - i, false));
+					moves.add(new MoveData(row, col, row - i, col - i, MoveData.MOVE));
 			}
 			
 			//SW squares
 			if (checkSW && row - i > -1 && col + i < 8) {
 				//Captures
 				if (Board.getSquare(row - i, col + i) instanceof Piece) {
-					if (Board.getSquare(row - i, col + i).getColor() != isWhite)
-						moves.add(new MoveData(row, col, row - i, col + i, true));
+					if (Board.getSquare(row - i, col + i).getColor() != isWhite) {
+						if (Board.getSquare(row - i, col + i) instanceof King) 
+							moves.add(new MoveData(row, col, row - i, col + i, MoveData.CHECK));
+						else
+							moves.add(new MoveData(row, col, row - i, col + i, MoveData.CAPTURE));
+					}
 					checkSW = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(row, col, row - i, col + i, false));
+					moves.add(new MoveData(row, col, row - i, col + i, MoveData.MOVE));
 			}
 			
 			//NE squares
 			if (checkNE && row + i < 8 && col - i > -1) {
 				//Captures
 				if (Board.getSquare(row + i, col - i) instanceof Piece) {
-					if (Board.getSquare(row + i, col - i).getColor() != isWhite)
-						moves.add(new MoveData(row, col, row + i, col - i, true));
+					if (Board.getSquare(row + i, col - i).getColor() != isWhite) {
+						if (Board.getSquare(row + i, col - i) instanceof King) 
+							moves.add(new MoveData(row, col, row + i, col - i, MoveData.CHECK));
+						else
+							moves.add(new MoveData(row, col, row + i, col - i, MoveData.CAPTURE));
+					}
 					checkNE = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(row, col, row + i, col - i, false));
+					moves.add(new MoveData(row, col, row + i, col - i, MoveData.MOVE));
 			}
 		}
 		

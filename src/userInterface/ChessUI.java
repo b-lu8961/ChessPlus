@@ -74,10 +74,18 @@ public class ChessUI extends JPanel implements ActionListener, MouseListener {
 	 */
 	public void mousePressed(MouseEvent mEvt) {
 		if (chessBoard.isEnabled()) {
-			if (chessBoard.getTurn()) 
-				chessMessage.setText("White: Make your move.");
-			else 
-				chessMessage.setText("Black: Make your move.");
+			if (chessBoard.getTurn()) {
+				if (chessBoard.getCheck())
+					chessMessage.setText("White: You are in check.");
+				else
+					chessMessage.setText("White: Make your move.");
+			}
+			else {
+				if (chessBoard.getCheck())
+					chessMessage.setText("Black: You are in check.");
+				else
+					chessMessage.setText("Black: Make your move.");
+			}
 		}
 	} //end mousePressed
 	

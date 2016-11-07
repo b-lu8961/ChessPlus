@@ -21,12 +21,16 @@ public class Knight extends Piece {
 					if ((row + i > -1) && (row + i < 8) && (col + j > -1) && (col + j < 8)) {
 						//Captures
 						if (Board.getSquare(row + i, col + j) instanceof Piece) {
-							if (Board.getSquare(row + i, col + j).getColor() != isWhite)
-								moves.add(new MoveData(row, col, row + i, col + j, true));
+							if (Board.getSquare(row + i, col + j).getColor() != isWhite) {
+								if (Board.getSquare(row + i, col + j) instanceof King)
+									moves.add(new MoveData(row, col, row + i, col + j, MoveData.CHECK));
+								else
+									moves.add(new MoveData(row, col, row + i, col + j, MoveData.CAPTURE));
+							}
 						}
 						//Moves
 						else
-							moves.add(new MoveData(row, col, row + i, col + j, false));
+							moves.add(new MoveData(row, col, row + i, col + j, MoveData.MOVE));
 					}
 				}
 			}

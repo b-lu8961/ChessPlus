@@ -14,8 +14,8 @@ public class Board extends JPanel implements MouseListener {
 	private BufferedImage chessImage;
 	private static Piece[][] boardState = new Piece[8][8];
 	private boolean turnStatus; //true for white, false for black
-	private int selectedRow;
-	private int selectedCol;
+	private boolean isInCheck;
+	private int selectedRow, selectedCol;
 	private MoveData[] selectedMoves;
 	private Piece selectedPiece;
 	private boolean isEnabled = true;
@@ -33,6 +33,10 @@ public class Board extends JPanel implements MouseListener {
 	
 	public boolean getTurn() {
 		return turnStatus;
+	}
+	
+	public boolean getCheck() {
+		return isInCheck;
 	}
 	
 	public static Piece getSquare(int row, int col) {
@@ -55,6 +59,7 @@ public class Board extends JPanel implements MouseListener {
 		selectedCol = -1;
 		selectedMoves = null;
 		selectedPiece = null;
+		isInCheck = false;
 		
 		/*
 		 * Initialize pawns
@@ -129,8 +134,28 @@ public class Board extends JPanel implements MouseListener {
 		}
 		selectedMoves = null;
 		turnStatus = !turnStatus;
+		lookForCheck();
 		repaint();
 	} //end makeMove
+	
+	public void lookForCheck() {
+		for (int row = 0; row < 8; row++) {
+			for (int col = 0; col < 8; col++) {
+				if (boardState[row][col] instanceof Piece) {
+					MoveData[] currentMoves = boardState[row][col].getLegalMoves();
+					if (currentMoves.length != 0) {
+						for (MoveData move : currentMoves) {
+							if (move.checkMoveType() == MoveData.CHECK) {
+								isInCheck = true;
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+		isInCheck = false;
+	}
 	
 	/**
 	 * Paints the chess board: border and squares.
@@ -200,7 +225,7 @@ public class Board extends JPanel implements MouseListener {
 					paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
 					
 					for (MoveData move : selectedMoves) {
-						if (move.checkCapture())
+						if (move.checkMoveType() != MoveData.MOVE)
 							paint.setColor(Color.RED);
 						else
 							paint.setColor(Color.BLUE);

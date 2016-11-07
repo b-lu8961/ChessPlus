@@ -1,11 +1,12 @@
 package chess;
 
 public class MoveData {
-	private int toRow;
-	private int toCol;
-	private int fromRow;
-	private int fromCol;
-	private boolean isACapture;
+	private int toRow, toCol;
+	private int fromRow, fromCol;
+	private int moveType;
+	public static final int MOVE = 0,
+							CAPTURE = -1,
+							CHECK = 1;
 	
 	/**
 	 * Constructor to create a MoveData object.
@@ -16,12 +17,12 @@ public class MoveData {
 	 * @param toCol 	ending column of moving piece
 	 * @param capture 	true if move is a capture, else is false
 	 */
-	public MoveData(int fromRow, int fromCol, int toRow, int toCol, boolean capture) {
+	public MoveData(int fromRow, int fromCol, int toRow, int toCol, int moveType) {
 		this.fromRow = fromRow;
 		this.fromCol = fromCol;
 		this.toRow = toRow;
 		this.toCol = toCol;
-		isACapture = capture;
+		this.moveType = moveType;
 	} //end constructor
 	
 	public int getStartRow() {
@@ -39,7 +40,7 @@ public class MoveData {
 	public int getEndCol() {
 		return toCol;
 	}
-	public boolean checkCapture() {
-		return isACapture;
+	public int checkMoveType() {
+		return moveType;
 	}
 } //end class MoveData

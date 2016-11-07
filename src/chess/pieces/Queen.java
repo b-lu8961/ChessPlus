@@ -1,7 +1,5 @@
 package chess.pieces;
 
-import java.util.ArrayList;
-
 import chess.MoveData;
 
 public class Queen extends Piece {
@@ -31,8 +29,6 @@ public class Queen extends Piece {
 			else
 				movesArray[i] = bishopArray[i - rookArray.length];
 		}
-		//ArrayList<MoveData> moves = new ArrayList<MoveData>();
-		//MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
 		return movesArray;
 	}
 

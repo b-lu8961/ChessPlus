@@ -26,52 +26,68 @@ public class Rook extends Piece {
 			if (checkEast && row + i < 8) {
 				//Captures
 				if (Board.getSquare(row + i, col) instanceof Piece) {
-					if (Board.getSquare(row + i, col).getColor() != isWhite)
-						moves.add(new MoveData(row, col, row + i, col, true));
+					if (Board.getSquare(row + i, col).getColor() != isWhite) {
+						if (Board.getSquare(row + i, col) instanceof King) 
+							moves.add(new MoveData(row, col, row + i, col, MoveData.CHECK));
+						else
+							moves.add(new MoveData(row, col, row + i, col, MoveData.CAPTURE));
+					}
 					checkEast = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(row, col, row + i, col, false));
+					moves.add(new MoveData(row, col, row + i, col, MoveData.MOVE));
 			}
 			
 			//West squares
 			if (checkWest && row - i > -1) {
 				//Captures
 				if (Board.getSquare(row - i, col) instanceof Piece) {
-					if (Board.getSquare(row - i, col).getColor() != isWhite)
-						moves.add(new MoveData(row, col, row - i, col, true));
+					if (Board.getSquare(row - i, col).getColor() != isWhite) {
+						if (Board.getSquare(row - i, col) instanceof King) 
+							moves.add(new MoveData(row, col, row - i, col, MoveData.CHECK));
+						else
+							moves.add(new MoveData(row, col, row - i, col, MoveData.CAPTURE));
+					}
 					checkWest = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(row, col, row - i, col, false));
+					moves.add(new MoveData(row, col, row - i, col, MoveData.MOVE));
 			}
 			
 			//South squares
 			if (checkSouth && col + i < 8) {
 				//Captures
 				if (Board.getSquare(row, col + i) instanceof Piece) {
-					if (Board.getSquare(row, col + i).getColor() != isWhite)
-						moves.add(new MoveData(row, col, row, col + i, true));
+					if (Board.getSquare(row, col + i).getColor() != isWhite) {
+						if (Board.getSquare(row, col + i) instanceof King)
+							moves.add(new MoveData(row, col, row, col + i, MoveData.CHECK));
+						else
+							moves.add(new MoveData(row, col, row, col + i, MoveData.CAPTURE));
+					}
 					checkSouth = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(row, col, row, col + i, false));
+					moves.add(new MoveData(row, col, row, col + i, MoveData.MOVE));
 			}
 			
 			//North squares
 			if (checkNorth && col - i > -1) {
 				//Captures
 				if (Board.getSquare(row, col - i) instanceof Piece) {
-					if (Board.getSquare(row, col - i).getColor() != isWhite)
-						moves.add(new MoveData(row, col, row, col - i, true));
+					if (Board.getSquare(row, col - i).getColor() != isWhite) {
+						if (Board.getSquare(row, col - i) instanceof King)
+							moves.add(new MoveData(row, col, row, col - i, MoveData.CHECK));
+						else
+							moves.add(new MoveData(row, col, row, col - i, MoveData.CAPTURE));
+					}
 					checkNorth = false;
 				}
 				//Moves
 				else
-					moves.add(new MoveData(row, col, row, col - i, false));
+					moves.add(new MoveData(row, col, row, col - i, MoveData.MOVE));
 			}
 		}
 		
