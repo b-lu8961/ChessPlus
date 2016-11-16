@@ -130,6 +130,9 @@ public class Board extends JPanel implements MouseListener {
 	 */
 	public void makeMove(MoveData move) {
 		Piece movingPiece = selectedPiece; 
+		/*
+		 * Check for a king capture (end game situation)
+		 */
 		if (boardState[move.getEndRow()][move.getEndCol()] instanceof King) {
 			boardState[move.getStartRow()][move.getStartCol()] = null;
 			boardState[move.getEndRow()][move.getEndCol()] = movingPiece;
@@ -158,6 +161,10 @@ public class Board extends JPanel implements MouseListener {
 					movingPiece.setRow(3);
 					movingPiece.setCol(move.getEndCol());
 				}
+			}
+			if (move.checkMoveType() == MoveData.EN_PASSANT) {
+				int color = turnStatus ? 1 : -1;
+				boardState[move.getEndRow()][move.getEndCol() + color] = null;
 			}
 			if (movingPiece instanceof Pawn) {
 				Pawn movedPawn = (Pawn)movingPiece;
@@ -262,7 +269,7 @@ public class Board extends JPanel implements MouseListener {
 					paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
 					
 					for (MoveData move : selectedMoves) {
-						if (move.checkMoveType() != MoveData.MOVE && move.checkMoveType() != MoveData.CASTLE)
+						if (move.checkMoveType() < 0) //All capture move types have a value less than 0
 							paint.setColor(Color.RED);
 						else
 							paint.setColor(Color.BLUE);

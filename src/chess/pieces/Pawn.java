@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Pawn extends Piece{
 	private static final String whitePath = "PieceImages/Chess/White/WhitePawn.png";
 	private static final String blackPath = "PieceImages/Chess/Black/BlackPawn.png";
-	private boolean hasMoved = false;
+	private int numMoves = 0;
 	
 	public Pawn(int row, int col, boolean isWhite) {
 		super(whitePath, blackPath, row, col, isWhite);
@@ -31,7 +31,7 @@ public class Pawn extends Piece{
 			/*
 			 * Two squares ahead if pawn hasn't moved 
 			 */
-			if (!hasMoved && Board.getSquare(row, col + 2*dY) == null) {
+			if (numMoves == 0 && Board.getSquare(row, col + 2*dY) == null) {
 				moves.add(new MoveData(row, col, row, col + 2*dY, MoveData.MOVE));
 			}
 		}
@@ -48,6 +48,12 @@ public class Pawn extends Piece{
 						moves.add(new MoveData(row, col, row + 1, col + dY, MoveData.CAPTURE));
 				}
 			}
+			//En passant capture
+			if (Board.getSquare(row + 1, col) instanceof Pawn) {
+				Pawn refPawn = (Pawn)Board.getSquare(row + 1, col);
+				if (refPawn.getNumMoves() == 1) 
+					moves.add(new MoveData(row, col, row + 1, col + dY, MoveData.EN_PASSANT));
+			}
 		}
 		if ((row - 1 > -1) && (col + dY > -1) && (col + dY < 8)) {
 			if (Board.getSquare(row - 1, col + dY) instanceof Piece) {
@@ -58,12 +64,22 @@ public class Pawn extends Piece{
 						moves.add(new MoveData(row, col, row - 1, col + dY, MoveData.CAPTURE));
 				}
 			}
+			//En passant capture
+			if (Board.getSquare(row - 1, col) instanceof Pawn) {
+				Pawn refPawn = (Pawn)Board.getSquare(row - 1, col);
+				if (refPawn.getNumMoves() == 1) 
+					moves.add(new MoveData(row, col, row - 1, col + dY, MoveData.EN_PASSANT));
+			}
 		}
 		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
 		return movesArray;
 	}
 	
 	public void setMoved() {
-		hasMoved = true;
+		numMoves++;
+	}
+	
+	public int getNumMoves() {
+		return numMoves;
 	}
 } //end class Pawn

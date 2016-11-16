@@ -4,10 +4,11 @@ public class MoveData {
 	private int toRow, toCol;
 	private int fromRow, fromCol;
 	private int moveType;
-	public static final int MOVE = 0,
+	public static final int MOVE = 1,
+							CASTLE = 2,
 							CAPTURE = -1,
-							CHECK = 1,
-							CASTLE = 2;
+							CHECK = -2,
+							EN_PASSANT = -3;
 	
 	/**
 	 * Constructor to create a MoveData object.
