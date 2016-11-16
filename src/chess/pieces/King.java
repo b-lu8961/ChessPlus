@@ -14,7 +14,7 @@ public class King extends Piece {
 		super(whitePath, blackPath, row, col, isWhite);
 	}
 	
-	//Need to implement check & checkmate situations, castling with rook
+	//Need to implement check & checkmate situations
 	
 	@Override
 	public MoveData[] getLegalMoves() {
@@ -54,9 +54,12 @@ public class King extends Piece {
 		}
 		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
 		return movesArray;
-	}
+	} //end getLegalMoves
 
+	/**
+	 * Sets the hasMoved property to true.
+	 */
 	public void setMoved() {
 		hasMoved = true;
 	}
-}
+} //end class King

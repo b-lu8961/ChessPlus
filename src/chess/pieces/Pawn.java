@@ -29,7 +29,7 @@ public class Pawn extends Piece{
 		if ((col + dY > -1) && (col + dY < 8) && (Board.getSquare(row, col + dY) == null)) {
 			moves.add(new MoveData(row, col, row, col + dY, MoveData.MOVE));
 			/*
-			 * Two squares ahead if haven't moved 
+			 * Two squares ahead if pawn hasn't moved 
 			 */
 			if (!hasMoved && Board.getSquare(row, col + 2*dY) == null) {
 				moves.add(new MoveData(row, col, row, col + 2*dY, MoveData.MOVE));

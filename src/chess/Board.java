@@ -14,6 +14,7 @@ public class Board extends JPanel implements MouseListener {
 	private BufferedImage chessImage;
 	private static Piece[][] boardState = new Piece[8][8];
 	private boolean turnStatus; //true for white, false for black
+	private boolean gameWon = false;
 	private boolean isInCheck;
 	private int selectedRow, selectedCol;
 	private MoveData[] selectedMoves;
@@ -43,6 +44,10 @@ public class Board extends JPanel implements MouseListener {
 		return boardState[row][col];
 	}
 	
+	public boolean isGameWon() {
+		return gameWon;
+	}
+	
 	/**
 	 * Initializes boardState array with each piece 
 	 * in the correct position for a standard chess game.
@@ -55,6 +60,7 @@ public class Board extends JPanel implements MouseListener {
 		 */
 		isEnabled = true;
 		turnStatus = true;
+		gameWon = false;
 		selectedRow = -1;
 		selectedCol = -1;
 		selectedMoves = null;
@@ -124,48 +130,58 @@ public class Board extends JPanel implements MouseListener {
 	 */
 	public void makeMove(MoveData move) {
 		Piece movingPiece = selectedPiece; 
-		boardState[move.getStartRow()][move.getStartCol()] = null;
-		boardState[move.getEndRow()][move.getEndCol()] = movingPiece;
-		movingPiece.setRow(move.getEndRow());
-		movingPiece.setCol(move.getEndCol());
-		if (move.checkMoveType() == MoveData.CASTLE) {
-			if (move.getEndRow() > move.getStartRow()) {
-				movingPiece = boardState[7][move.getStartCol()];
-				boardState[7][move.getStartCol()] = null;
-				boardState[5][move.getEndCol()] = movingPiece;
-				movingPiece.setRow(5);
-				movingPiece.setCol(move.getEndCol());
+		if (boardState[move.getEndRow()][move.getEndCol()] instanceof King) {
+			boardState[move.getStartRow()][move.getStartCol()] = null;
+			boardState[move.getEndRow()][move.getEndCol()] = movingPiece;
+			movingPiece.setRow(move.getEndRow());
+			movingPiece.setCol(move.getEndCol());
+			disableBoard();
+			gameWon = true;
+		}
+		else {
+			boardState[move.getStartRow()][move.getStartCol()] = null;
+			boardState[move.getEndRow()][move.getEndCol()] = movingPiece;
+			movingPiece.setRow(move.getEndRow());
+			movingPiece.setCol(move.getEndCol());
+			if (move.checkMoveType() == MoveData.CASTLE) {
+				if (move.getEndRow() > move.getStartRow()) {
+					movingPiece = boardState[7][move.getStartCol()];
+					boardState[7][move.getStartCol()] = null;
+					boardState[5][move.getEndCol()] = movingPiece;
+					movingPiece.setRow(5);
+					movingPiece.setCol(move.getEndCol());
+				}
+				else {
+					movingPiece = boardState[0][move.getStartCol()];
+					boardState[0][move.getStartCol()] = null;
+					boardState[3][move.getEndCol()] = movingPiece;
+					movingPiece.setRow(3);
+					movingPiece.setCol(move.getEndCol());
+				}
 			}
-			else {
-				movingPiece = boardState[0][move.getStartCol()];
-				boardState[0][move.getStartCol()] = null;
-				boardState[3][move.getEndCol()] = movingPiece;
-				movingPiece.setRow(3);
-				movingPiece.setCol(move.getEndCol());
+			if (movingPiece instanceof Pawn) {
+				Pawn movedPawn = (Pawn)movingPiece;
+				movedPawn.setMoved();
 			}
+			if (movingPiece instanceof Rook) {
+				Rook movedRook = (Rook)movingPiece;
+				movedRook.setMoved();
+			}
+			if (movingPiece instanceof King) {
+				King movedKing = (King)movingPiece;
+				movedKing.setMoved();
+			}
+			selectedMoves = null;
+			turnStatus = !turnStatus;
+			lookForCheck();
+			repaint();
 		}
-		if (movingPiece instanceof Pawn) {
-			Pawn movedPawn = (Pawn)movingPiece;
-			movedPawn.setMoved();
-		}
-		if (movingPiece instanceof Rook) {
-			Rook movedRook = (Rook)movingPiece;
-			movedRook.setMoved();
-		}
-		if (movingPiece instanceof King) {
-			King movedKing = (King)movingPiece;
-			movedKing.setMoved();
-		}
-		selectedMoves = null;
-		turnStatus = !turnStatus;
-		lookForCheck();
-		repaint();
 	} //end makeMove
 	
 	public void lookForCheck() {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
-				if (boardState[row][col] instanceof Piece) {
+				if (boardState[row][col] instanceof Piece && boardState[row][col].getColor() != turnStatus) {
 					MoveData[] currentMoves = boardState[row][col].getLegalMoves();
 					if (currentMoves.length != 0) {
 						for (MoveData move : currentMoves) {
@@ -193,11 +209,9 @@ public class Board extends JPanel implements MouseListener {
 			for (int col = 0; col < 8; col++) {
 				Color bgColor;
 				if ((row % 2 == 0 && col % 2 == 0) || (row % 2 == 1 && col % 2 == 1)) {
-					//paint.setColor(Color.WHITE);
 					bgColor = Color.WHITE;
 				}
 				else { 
-					//paint.setColor(Color.GRAY);
 					bgColor = Color.GRAY;
 				}
 				Piece currentPiece = boardState[row][col];
@@ -209,7 +223,6 @@ public class Board extends JPanel implements MouseListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				//paint.fillRect(2 + (56 * col), 2 + (56 * row), 56, 56);
 				paint.drawImage(chessImage, 2 + (56 * row), 2 + (56 * col), bgColor, this);
 			}
 		}
@@ -249,7 +262,7 @@ public class Board extends JPanel implements MouseListener {
 					paint.drawRect(3 + (56 * selectedRow), 3 + (56 * selectedCol), 54, 54);
 					
 					for (MoveData move : selectedMoves) {
-						if (move.checkMoveType() != MoveData.MOVE || move.checkMoveType() != MoveData.CASTLE)
+						if (move.checkMoveType() != MoveData.MOVE && move.checkMoveType() != MoveData.CASTLE)
 							paint.setColor(Color.RED);
 						else
 							paint.setColor(Color.BLUE);
