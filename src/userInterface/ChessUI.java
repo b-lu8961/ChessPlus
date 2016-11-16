@@ -47,6 +47,10 @@ public class ChessUI extends JPanel implements ActionListener, MouseListener {
 		add(chessMessage);
 	} //end constructor
 	
+	public int showPromotionDialog() {
+		return 0;
+	}
+	
 	/**
 	 * Perform actions on button presses
 	 */
@@ -64,6 +68,7 @@ public class ChessUI extends JPanel implements ActionListener, MouseListener {
 		else if (src == newGameButton) {	//Resets chess board and starts new game
 			chessMessage.setText("White: Make your move.");
 			chessBoard.setupBoard();
+			showPromotionDialog();
 			repaint();
 		}
 	} //end actionPerformed

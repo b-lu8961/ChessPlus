@@ -146,6 +146,9 @@ public class Board extends JPanel implements MouseListener {
 			boardState[move.getEndRow()][move.getEndCol()] = movingPiece;
 			movingPiece.setRow(move.getEndRow());
 			movingPiece.setCol(move.getEndCol());
+			/*
+			 * Check for castles
+			 */
 			if (move.checkMoveType() == MoveData.CASTLE) {
 				if (move.getEndRow() > move.getStartRow()) {
 					movingPiece = boardState[7][move.getStartCol()];
@@ -169,6 +172,8 @@ public class Board extends JPanel implements MouseListener {
 			if (movingPiece instanceof Pawn) {
 				Pawn movedPawn = (Pawn)movingPiece;
 				movedPawn.setMoved();
+				if ((move.getEndCol() == 0 && movingPiece.getColor()) || (move.getEndCol() == 7 && !movingPiece.getColor()))
+					doPromotion(movingPiece);
 			}
 			if (movingPiece instanceof Rook) {
 				Rook movedRook = (Rook)movingPiece;
@@ -184,6 +189,28 @@ public class Board extends JPanel implements MouseListener {
 			repaint();
 		}
 	} //end makeMove
+	
+	public void doPromotion(Piece refPawn) {
+		Object[] options = {"Bishop", "Knight", "Queen", "Rook"};
+		int n = JOptionPane.showOptionDialog(this.getRootPane(), 
+				"What would you like to promote to?",
+				"Pawn Promotion", 
+				JOptionPane.YES_NO_CANCEL_OPTION, 
+				JOptionPane.QUESTION_MESSAGE, 
+				null, 
+				options, 
+				options[0]);
+		int row = refPawn.getRow();
+		int col = refPawn.getCol();
+		if (n == 0)
+			boardState[row][col] = new Bishop(row, col, turnStatus);
+		else if (n == 1)
+			boardState[row][col] = new Knight(row, col, turnStatus);
+		else if (n == 2)
+			boardState[row][col] = new Queen(row, col, turnStatus);
+		else 
+			boardState[row][col] = new Rook(row, col, turnStatus);
+	}
 	
 	public void lookForCheck() {
 		for (int row = 0; row < 8; row++) {

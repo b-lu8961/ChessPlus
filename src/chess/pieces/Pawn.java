@@ -11,8 +11,6 @@ public class Pawn extends Piece{
 	public Pawn(int row, int col, boolean isWhite) {
 		super(whitePath, blackPath, row, col, isWhite);
 	}
-	
-	//Need to implement en passant, pawn promotion
 
 	@Override
 	public MoveData[] getLegalMoves() { 
