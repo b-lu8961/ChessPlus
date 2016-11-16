@@ -8,6 +8,7 @@ import chess.MoveData;
 public class Rook extends Piece {
 	private static final String whitePath = "PieceImages/Chess/White/WhiteRook.png";
 	private static final String blackPath = "PieceImages/Chess/Black/BlackRook.png";
+	private boolean hasMoved = false;
 	
 	public Rook(int row, int col, boolean isWhite) {
 		super(whitePath, blackPath, row, col, isWhite);
@@ -95,4 +96,11 @@ public class Rook extends Piece {
 		return movesArray;
 	}
 
+	public void setMoved() {
+		hasMoved = true;
+	}
+	
+	public boolean getMoveStatus() {
+		return hasMoved;
+	}
 }

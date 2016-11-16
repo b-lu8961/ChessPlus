@@ -8,6 +8,7 @@ import chess.MoveData;
 public class King extends Piece {
 	private static final String whitePath = "PieceImages/Chess/White/WhiteKing.png";
 	private static final String blackPath = "PieceImages/Chess/Black/BlackKing.png";
+	private boolean hasMoved = false;
 	
 	public King(int row, int col, boolean isWhite) {
 		super(whitePath, blackPath, row, col, isWhite);
@@ -34,8 +35,28 @@ public class King extends Piece {
 				}
 			}
 		}
+		
+		//Castles
+		int color = this.getColor() ? 7 : 0;
+		if (!hasMoved) {
+			Piece leftCorner = Board.getSquare(0, color);
+			Piece rightCorner = Board.getSquare(0, color);
+			if (leftCorner instanceof Rook && !((Rook) leftCorner).getMoveStatus()) {
+				if (Board.getSquare(1, color) == null && Board.getSquare(2, color) == null && Board.getSquare(3, color) == null) {
+					moves.add(new MoveData(row, col, row - 2, col, MoveData.CASTLE));
+				}
+			}
+			if (rightCorner instanceof Rook && !((Rook) rightCorner).getMoveStatus()) {
+				if (Board.getSquare(5, color) == null && Board.getSquare(6, color) == null) {
+					moves.add(new MoveData(row, col, row + 2, col, MoveData.CASTLE));
+				}
+			}
+		}
 		MoveData[] movesArray = moves.toArray(new MoveData[moves.size()]);
 		return movesArray;
 	}
 
+	public void setMoved() {
+		hasMoved = true;
+	}
 }

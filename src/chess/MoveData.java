@@ -6,7 +6,8 @@ public class MoveData {
 	private int moveType;
 	public static final int MOVE = 0,
 							CAPTURE = -1,
-							CHECK = 1;
+							CHECK = 1,
+							CASTLE = 2;
 	
 	/**
 	 * Constructor to create a MoveData object.
